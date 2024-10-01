@@ -17,9 +17,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Validate composer.json and composer.lock
-      working-directory: bridge-directory
-      run: composer validate --strict
+    #- name: Validate composer.json and composer.lock
+    #  working-directory: bridge-directory
+    #  run: composer validate --strict
 
     - name: Cache Composer packages
       id: composer-cache

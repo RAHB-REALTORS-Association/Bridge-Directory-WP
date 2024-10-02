@@ -9,15 +9,15 @@ class API_Client {
     private $advanced_query;
 
     public function __construct() {
-        $this->access_token    = get_option( 'bridge_directory_access_token' );
-        $this->dataset_name    = get_option( 'bridge_directory_dataset_name' );
-        $this->advanced_query  = get_option( 'bridge_directory_advanced_query', '' );
+        $this->access_token   = get_option( 'bridge_directory_access_token' );
+        $this->dataset_name   = get_option( 'bridge_directory_dataset_name' );
+        $this->advanced_query = get_option( 'bridge_directory_advanced_query', '' );
     }
 
     public function fetch_all_offices() {
         $all_offices = [];
         $offset = 0;
-        $limit = 1000;
+        $limit = 200;
         $fields = implode( ',', [
             'OfficeKey',
             'OfficeName',
@@ -57,7 +57,7 @@ class API_Client {
     public function fetch_updated_offices( $since ) {
         $updated_offices = [];
         $offset = 0;
-        $limit = 1000;
+        $limit = 200;
         $fields = implode( ',', [
             'OfficeKey',
             'OfficeName',
@@ -98,7 +98,7 @@ class API_Client {
     public function fetch_inactive_offices( $since ) {
         $inactive_offices = [];
         $offset = 0;
-        $limit = 1000;
+        $limit = 200;
 
         do {
             $response = $this->fetch_offices( [
@@ -130,23 +130,14 @@ class API_Client {
 
         $args['access_token'] = $this->access_token;
 
-        // Parse advanced query parameters
-        $advanced_args = [];
+        // Parse and merge advanced query parameters
         if ( ! empty( $this->advanced_query ) ) {
             parse_str( $this->advanced_query, $advanced_args );
-            // Remove OfficeStatus from advanced args if present
-            unset( $advanced_args['OfficeStatus'] );
+            unset( $advanced_args['OfficeStatus'] ); // prevent overriding the status
+            $args = array_merge( $advanced_args, $args );
         }
 
-        // Merge advanced query parameters without overriding existing keys
-        $args = array_merge( $advanced_args, $args );
-
-        $url = sprintf(
-            'https://api.bridgedataoutput.com/api/v2/%s/offices',
-            $this->dataset_name
-        );
-
-        // Encode query parameters to ensure proper URL formatting
+        $url = sprintf( 'https://api.bridgedataoutput.com/api/v2/%s/offices', $this->dataset_name );
         $query_string = http_build_query( $args, '', '&', PHP_QUERY_RFC3986 );
 
         $response = wp_remote_get( $url . '?' . $query_string );
@@ -165,3 +156,4 @@ class API_Client {
         return new \WP_Error( 'api_error', 'Failed to fetch data from the API.' );
     }
 }
+?>

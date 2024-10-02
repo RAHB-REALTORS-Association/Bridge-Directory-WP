@@ -1,6 +1,6 @@
 # Bridge API Directory
 
-Displays a searchable directory of offices using the Bridge Data Output API.
+Displays a searchable directory of offices using the Bridge Interactive API.
 
 ## Installation
 
@@ -38,8 +38,8 @@ Displays a searchable directory of offices using the Bridge Data Output API.
 
 ## Changelog
 
-### 0.0.2
-
-- Implemented custom database table for data storage.
-- Enhanced performance for large datasets.
-- Adjusted classes to use the new data storage mechanism.
+- **Version 0.0.1**: Established the foundation with basic directory display and search capabilities.
+- **Version 0.0.2**: Introduced robust data synchronization processes to handle large datasets efficiently.
+- **Version 0.0.3**: Enhanced the front-end user interface with a grid display, search bar, and infinite scroll.
+- **Version 0.0.4**: Improved performance and scalability by implementing a custom database table for data storage.
+- **Version 0.0.5**: Added flexibility with an advanced query filter setting, allowing administrators to customize API requests without compromising core functionality.

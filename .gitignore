@@ -47,5 +47,8 @@ wp-config.php
 # uncomment the next line
 #/wp-content/themes
 
-#vendor
+vendor
+node_modules
+release
+build
 .DS_Store

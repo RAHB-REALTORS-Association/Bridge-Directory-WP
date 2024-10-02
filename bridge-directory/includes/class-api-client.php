@@ -74,11 +74,11 @@ class API_Client {
 
         do {
             $response = $this->fetch_offices( [
-                'OfficeStatus'          => 'Active',
-                'ModificationTimestamp' => $since,
-                'fields'                => $fields,
-                'limit'                 => $limit,
-                'offset'                => $offset,
+                'OfficeStatus'             => 'Active',
+                'ModificationTimestamp.gt' => $since,
+                'fields'                   => $fields,
+                'limit'                    => $limit,
+                'offset'                   => $offset,
             ] );
 
             if ( is_wp_error( $response ) ) {
@@ -102,11 +102,11 @@ class API_Client {
 
         do {
             $response = $this->fetch_offices( [
-                'OfficeStatus'          => 'Inactive',
-                'ModificationTimestamp' => $since,
-                'fields'                => 'OfficeKey',
-                'limit'                 => $limit,
-                'offset'                => $offset,
+                'OfficeStatus'             => 'Inactive',
+                'ModificationTimestamp.gt' => $since,
+                'fields'                   => 'OfficeKey',
+                'limit'                    => $limit,
+                'offset'                   => $offset,
             ] );
 
             if ( is_wp_error( $response ) ) {
@@ -130,14 +130,23 @@ class API_Client {
 
         $args['access_token'] = $this->access_token;
 
-        // Parse and merge advanced query parameters
+        // Parse advanced query parameters
+        $advanced_args = [];
         if ( ! empty( $this->advanced_query ) ) {
             parse_str( $this->advanced_query, $advanced_args );
-            unset( $advanced_args['OfficeStatus'] ); // prevent overriding the status
-            $args = array_merge( $advanced_args, $args );
+            // Remove OfficeStatus and ModificationTimestamp.gt from advanced args if present
+            unset( $advanced_args['OfficeStatus'], $advanced_args['ModificationTimestamp.gt'] );
         }
 
-        $url = sprintf( 'https://api.bridgedataoutput.com/api/v2/%s/offices', $this->dataset_name );
+        // Merge advanced query parameters without overriding existing keys
+        $args = array_merge( $advanced_args, $args );
+
+        $url = sprintf(
+            'https://api.bridgedataoutput.com/api/v2/%s/offices',
+            $this->dataset_name
+        );
+
+        // Encode query parameters to ensure proper URL formatting
         $query_string = http_build_query( $args, '', '&', PHP_QUERY_RFC3986 );
 
         $response = wp_remote_get( $url . '?' . $query_string );
@@ -156,4 +165,3 @@ class API_Client {
         return new \WP_Error( 'api_error', 'Failed to fetch data from the API.' );
     }
 }
-?>

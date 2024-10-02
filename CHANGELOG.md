@@ -1,3 +1,10 @@
+## [0.0.6]
+
+### Fixed
+
+- **ModificationTimestamp Query Parameter**: Corrected the format of the `ModificationTimestamp` parameter in API requests by appending the `.gt` operator, ensuring that only records modified since the last sync are fetched.
+- **Timestamp Formatting**: Ensured that timestamps used in API requests are correctly formatted in ISO 8601 format (`YYYY-MM-DDTHH:MM:SSZ`) and in UTC time.
+
 ## [0.0.5]
 
 ### Added

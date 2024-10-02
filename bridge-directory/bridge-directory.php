@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 
+use BridgeDirectory\AJAX_Handler;
 use BridgeDirectory\API_Client;
 use BridgeDirectory\DB_Handler;
 use BridgeDirectory\Search_Handler;

@@ -3,7 +3,7 @@
         'name' => 'justinh-rahb/bridge-directory',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '48aaf176c17a698321aeff4ea84371fcbab1577b',
+        'reference' => '4b382fe2e691cd140f217c3ee9bb52364962c721',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'justinh-rahb/bridge-directory' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '48aaf176c17a698321aeff4ea84371fcbab1577b',
+            'reference' => '4b382fe2e691cd140f217c3ee9bb52364962c721',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

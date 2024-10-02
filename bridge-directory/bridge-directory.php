@@ -39,6 +39,9 @@ $block_register->register();
 $data_sync = new Data_Sync( $db_handler );
 $data_sync->schedule_incremental_sync();
 
+// Initialize AJAX Handler
+$ajax_handler = new AJAX_Handler( $search_handler );
+
 // Activation and Deactivation Hooks
 register_activation_hook( __FILE__, [ 'BridgeDirectory\DB_Handler', 'activate' ] );
 register_deactivation_hook( __FILE__, [ 'BridgeDirectory\DB_Handler', 'deactivate' ] );
@@ -56,4 +59,3 @@ function bridge_directory_custom_cron_schedule( $schedules ) {
     ];
     return $schedules;
 }
- 

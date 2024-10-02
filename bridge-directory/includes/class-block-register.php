@@ -12,6 +12,7 @@ class Block_Register {
 
     public function register() {
         add_action( 'init', [ $this, 'register_blocks' ] );
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
     }
 
     public function register_blocks() {
@@ -30,52 +31,50 @@ class Block_Register {
                     'type'    => 'number',
                     'default' => 3,
                 ],
-                'rows'     => [
-                    'type'    => 'number',
-                    'default' => 5,
-                ],
             ],
             'render_callback' => [ $this, 'render_block' ],
         ] );
     }
 
-    public function render_block( $attributes ) {
-        $query   = isset( $_GET['bridge_search'] ) ? sanitize_text_field( $_GET['bridge_search'] ) : '';
-        $offices = $this->search_handler->search_offices( $query );
+    public function enqueue_scripts() {
+        if ( has_block( 'bridge-directory/office-list' ) ) {
+            wp_enqueue_script(
+                'bridge-directory-frontend',
+                plugins_url( 'assets/js/bridge-directory.js', __DIR__ ),
+                [ 'jquery' ],
+                '1.0.0',
+                true
+            );
 
+            wp_enqueue_style(
+                'bridge-directory-style',
+                plugins_url( 'assets/css/bridge-directory.css', __DIR__ ),
+                [],
+                '1.0.0'
+            );
+
+            wp_localize_script( 'bridge-directory-frontend', 'bridgeDirectory', [
+                'ajax_url'   => admin_url( 'admin-ajax.php' ),
+                'columns'    => get_option( 'bridge_directory_columns', 3 ),
+                'nonce'      => wp_create_nonce( 'bridge_directory_nonce' ),
+            ] );
+        }
+    }
+
+    public function render_block( $attributes ) {
         ob_start();
         ?>
-
-        <form method="get">
-            <input type="text" name="bridge_search" placeholder="Search offices..." value="<?php echo esc_attr( $query ); ?>" />
-            <button type="submit">Search</button>
-        </form>
-
-        <div class="bridge-directory" style="display: grid; grid-template-columns: repeat(<?php echo esc_attr( $attributes['columns'] ); ?>, 1fr); gap: 20px;">
-            <?php
-            $count = 0;
-            foreach ( $offices as $office ) {
-                if ( $count >= $attributes['rows'] * $attributes['columns'] ) {
-                    break;
-                }
-                ?>
-                <div class="office-item">
-                    <h3><?php echo esc_html( $office['OfficeName'] ); ?></h3>
-                    <p>Phone: <?php echo esc_html( $office['OfficePhone'] ); ?></p>
-                    <p>Email: <?php echo esc_html( $office['OfficeEmail'] ); ?></p>
-                    <p>Address: <?php
-                        echo esc_html( $office['OfficeAddress1'] . ' ' . $office['OfficeAddress2'] . ', ' . $office['OfficeCity'] . ', ' . $office['OfficeStateOrProvince'] . ' ' . $office['OfficePostalCode'] );
-                    ?></p>
-                    <?php if ( ! empty( $office['SocialMediaWebsiteUrlOrId'] ) ) : ?>
-                        <p>Website: <a href="<?php echo esc_url( $office['SocialMediaWebsiteUrlOrId'] ); ?>"><?php echo esc_html( $office['SocialMediaWebsiteUrlOrId'] ); ?></a></p>
-                    <?php endif; ?>
-                </div>
-                <?php
-                $count++;
-            }
-            ?>
+        <div class="bridge-directory-grid">
+            <div class="bridge-directory-search">
+                <input type="text" id="bridge-directory-search-input" placeholder="Search...">
+            </div>
+            <div id="bridge-directory-cards" class="bridge-directory-cards">
+                <!-- Cards will be dynamically added here -->
+            </div>
+            <div id="bridge-directory-loader" class="bridge-directory-loader" style="display: none;">
+                Loading...
+            </div>
         </div>
-
         <?php
         return ob_get_clean();
     }

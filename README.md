@@ -27,6 +27,9 @@ Displays a searchable directory of offices using the Bridge Data Output API.
 - **Search Functionality:** Users can search offices by name, phone, or email.
 - **Customizable Display:** Adjust the number of columns and rows in the block editor.
 - **Cache Management:** Clear the cache manually if needed.
+- **Enhanced Directory Display:** Offices are displayed as a grid of cards for better visual presentation.
+- **Live Search with Debounce:** Users can search offices with instant feedback, and the search input is debounced to optimize performance.
+- **Infinite Scroll:** As users scroll down, more offices are loaded automatically without needing to click pagination links.
 
 ## Data Storage
 

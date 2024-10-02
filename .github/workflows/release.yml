@@ -39,13 +39,13 @@ jobs:
           node-version: '18'
           #cache: 'npm'
 
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('bridge-directory/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      #- name: Cache Node.js modules
+      #  uses: actions/cache@v3
+      #  with:
+      #    path: ~/.npm
+      #    key: ${{ runner.os }}-node-${{ hashFiles('bridge-directory/package-lock.json') }}
+      #    restore-keys: |
+      #      ${{ runner.os }}-node-
 
       - name: Install Node.js dependencies
         working-directory: bridge-directory

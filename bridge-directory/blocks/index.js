@@ -1,10 +1,8 @@
-// File: /blocks/index.js
-
-( function ( blocks, element, editor ) {
+( function ( blocks, element, blockEditor, components ) {
     var el = element.createElement;
-    var InspectorControls = editor.InspectorControls;
-    var TextControl = editor.TextControl;
-    var PanelBody = editor.PanelBody;
+    var InspectorControls = blockEditor.InspectorControls;
+    var TextControl = components.TextControl;
+    var PanelBody = components.PanelBody;
 
     blocks.registerBlockType( 'bridge-directory/office-list', {
         title: 'Bridge Office List',
@@ -60,4 +58,4 @@
             return null;
         },
     } );
-} )( window.wp.blocks, window.wp.element, window.wp.blockEditor );
+} )( window.wp.blocks, window.wp.element, window.wp.blockEditor, window.wp.components );

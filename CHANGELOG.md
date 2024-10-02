@@ -1,3 +1,9 @@
+## [0.0.10]
+
+### Fixed
+
+- **Block Editor Script Loading**: Corrected an issue where the block editor script was not being loaded due to incorrect path resolution, ensuring the block editor functionality works as expected.
+
 ## [0.0.9]
 
 ### Fixed

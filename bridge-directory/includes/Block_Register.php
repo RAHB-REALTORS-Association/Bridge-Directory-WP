@@ -19,7 +19,7 @@ class Block_Register {
         wp_register_script(
             'bridge-directory-block',
             plugins_url( 'build/blocks.js', __DIR__ ),
-            [ 'wp-blocks', 'wp-element', 'wp-editor' ],
+            [ 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components' ],
             '1.0.0',
             true
         );

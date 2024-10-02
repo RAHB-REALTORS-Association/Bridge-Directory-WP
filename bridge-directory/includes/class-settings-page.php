@@ -23,8 +23,26 @@ class Settings_Page {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
-        ?>
 
+        // Process sync and clear cache actions
+        if ( isset( $_POST['bridge_directory_full_sync'] ) ) {
+            check_admin_referer( 'bridge_directory_full_sync' );
+            $data_sync = new Data_Sync();
+            $data_sync->full_sync();
+            echo '<div class="updated"><p>Full sync initiated.</p></div>';
+        }
+
+        if ( isset( $_POST['bridge_directory_clear_cache'] ) ) {
+            check_admin_referer( 'bridge_directory_clear_cache' );
+            $cache_handler = new Cache_Handler();
+            $cache_handler->clear_cache();
+            echo '<div class="updated"><p>Cache cleared.</p></div>';
+        }
+
+        $cache_handler = new DB_Handler();
+        $total_records = $cache_handler->get_total_records();
+
+        ?>
         <div class="wrap">
             <h1>Bridge Directory Settings</h1>
             <form method="post" action="options.php">
@@ -34,8 +52,20 @@ class Settings_Page {
                 submit_button();
                 ?>
             </form>
-        </div>
 
+            <h2>Data Management</h2>
+            <p>Total Cached Records: <?php echo esc_html( $total_records ); ?></p>
+            <form method="post">
+                <?php wp_nonce_field( 'bridge_directory_full_sync' ); ?>
+                <input type="hidden" name="bridge_directory_full_sync" value="1">
+                <?php submit_button( 'Full Sync', 'primary', 'submit', false ); ?>
+            </form>
+            <form method="post" style="margin-top: 10px;">
+                <?php wp_nonce_field( 'bridge_directory_clear_cache' ); ?>
+                <input type="hidden" name="bridge_directory_clear_cache" value="1">
+                <?php submit_button( 'Clear Cache', 'secondary', 'submit', false ); ?>
+            </form>
+        </div>
         <?php
     }
 
@@ -49,6 +79,11 @@ class Settings_Page {
         ] );
 
         register_setting( 'bridge_directory_settings', 'bridge_directory_cache_lifetime', [
+            'sanitize_callback' => 'absint',
+            'default'           => 24,
+        ] );
+
+        register_setting( 'bridge_directory_settings', 'bridge_directory_sync_interval', [
             'sanitize_callback' => 'absint',
             'default'           => 24,
         ] );
@@ -77,9 +112,9 @@ class Settings_Page {
         );
 
         add_settings_field(
-            'bridge_directory_cache_lifetime',
-            'Cache Lifetime (hours)',
-            [ $this, 'cache_lifetime_field_html' ],
+            'bridge_directory_sync_interval',
+            'Sync Interval (hours)',
+            [ $this, 'sync_interval_field_html' ],
             'bridge_directory_settings',
             'bridge_directory_main'
         );
@@ -95,9 +130,9 @@ class Settings_Page {
         echo '<input type="text" name="bridge_directory_dataset_name" value="' . esc_attr( $value ) . '" />';
     }
 
-    public function cache_lifetime_field_html() {
-        $value = get_option( 'bridge_directory_cache_lifetime', 24 );
-        echo '<input type="number" name="bridge_directory_cache_lifetime" value="' . esc_attr( $value ) . '" min="1" />';
+    public function sync_interval_field_html() {
+        $value = get_option( 'bridge_directory_sync_interval', 24 );
+        echo '<input type="number" name="bridge_directory_sync_interval" value="' . esc_attr( $value ) . '" min="1" />';
     }
 
     public function validate_input( $input ) {

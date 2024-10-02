@@ -4,38 +4,30 @@ namespace BridgeDirectory;
 defined( 'ABSPATH' ) || exit;
 
 class Search_Handler {
-    private $api_client;
-    private $cache_handler;
+    private $db_handler;
 
-    public function __construct( $api_client, $cache_handler ) {
-        $this->api_client = $api_client;
-        $this->cache_handler = $cache_handler;
-    }
-
-    public function get_offices() {
-        $offices = $this->cache_handler->get_cached_offices();
-        if ( null === $offices ) {
-            $offices = $this->api_client->fetch_offices();
-            if ( is_wp_error( $offices ) ) {
-                return [];
-            }
-            $this->cache_handler->cache_offices( $offices );
-        }
-        return $offices;
+    public function __construct( $db_handler ) {
+        $this->db_handler = $db_handler;
     }
 
     public function search_offices( $query ) {
-        $offices = $this->get_offices();
-        if ( empty( $query ) ) {
-            return $offices;
+        global $wpdb;
+
+        $table_name = $this->db_handler->table_name;
+
+        $sql = "SELECT * FROM {$table_name}";
+
+        if ( ! empty( $query ) ) {
+            $like_query = '%' . $wpdb->esc_like( $query ) . '%';
+            $sql .= $wpdb->prepare(
+                " WHERE OfficeName LIKE %s OR OfficePhone LIKE %s OR OfficeEmail LIKE %s",
+                $like_query,
+                $like_query,
+                $like_query
+            );
         }
 
-        $filtered = array_filter( $offices, function( $office ) use ( $query ) {
-            return stripos( $office['OfficeName'], $query ) !== false ||
-                   stripos( $office['OfficePhone'], $query ) !== false ||
-                   stripos( $office['OfficeEmail'], $query ) !== false;
-        } );
-
-        return $filtered;
+        $results = $wpdb->get_results( $sql, ARRAY_A );
+        return $results;
     }
 }

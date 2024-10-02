@@ -1,0 +1,18 @@
+{
+    "name": "bridge-directory",
+    "version": "0.0.5",
+    "description": "A WordPress plugin that displays a searchable directory of offices using the Bridge Data Output API.",
+    "main": "index.js",
+    "scripts": {
+      "build": "webpack --mode production"
+    },
+    "author": "Cornerstone Association of REALTORS",
+    "license": "GPL-2.0-or-later",
+    "devDependencies": {
+      "@wordpress/babel-preset-default": "^7.0.0",
+      "babel-loader": "^8.0.0",
+      "webpack": "^5.0.0",
+      "webpack-cli": "^4.0.0"
+    }
+  }
+  

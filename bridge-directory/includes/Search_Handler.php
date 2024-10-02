@@ -14,7 +14,7 @@ class Search_Handler {
         global $wpdb;
 
         $offset = ( $page - 1 ) * $limit;
-        $table_name = $this->db_handler->table_name;
+        $table_name = $this->db_handler->get_table_name;
 
         $sql = "SELECT * FROM {$table_name}";
         $where_clauses = [];

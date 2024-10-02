@@ -11,6 +11,10 @@ class DB_Handler {
         $this->table_name = $wpdb->prefix . 'bridge_directory_offices';
     }
 
+    public function get_table_name() {
+        return $this->table_name;
+    }
+
     public static function activate() {
         global $wpdb;
         $table_name = $wpdb->prefix . 'bridge_directory_offices';

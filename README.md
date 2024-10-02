@@ -48,3 +48,4 @@ Displays a searchable directory of offices using the Bridge Interactive API.
 - **Version 0.0.8**: Rename class files to conform to PSR-4 standards.
 - **Version 0.0.9**: Fix query parameter building to handle multiple parameters correctly.
 - **Version 0.0.10**: Fix WordPress block editor script loading issue.
+- **Version 0.0.11**: Fix search handler access to the database table.

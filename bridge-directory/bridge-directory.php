@@ -3,7 +3,7 @@
  * Plugin Name: Bridge API Directory
  * Plugin URI: https://github.com/RAHB-REALTORS-Association/Bridge-Directory-WP
  * Description: Displays a searchable directory of offices using the Bridge Data Output API.
- * Version: 0.0.1
+ * Version: 0.0.2
  * Author: RAHB
  * Author URI: https://lab.rahb.ca
  * License: GPL-2.0

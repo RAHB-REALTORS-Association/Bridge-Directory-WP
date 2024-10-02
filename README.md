@@ -44,3 +44,4 @@ Displays a searchable directory of offices using the Bridge Interactive API.
 - **Version 0.0.4**: Improved performance and scalability by implementing a custom database table for data storage.
 - **Version 0.0.5**: Added flexibility with an advanced query filter setting, allowing administrators to customize API requests without compromising core functionality.
 - **Version 0.0.6**: Correctly use ModificationTimestamp.gt parameter in API requests to fetch only modified records since the last sync for incremental updates.
+- **Version 0.0.7**: Added GitHub Action workflow for automated release builds.

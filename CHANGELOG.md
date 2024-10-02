@@ -1,3 +1,9 @@
+## [0.0.7]
+
+### Added
+
+- **GitHub Action Workflow**: Implemented a GitHub Action workflow to automate the release build process, ensuring consistent versioning and packaging of the plugin.
+
 ## [0.0.6]
 
 ### Fixed

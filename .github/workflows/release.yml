@@ -1,0 +1,74 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          tools: composer
+
+      - name: Cache Composer packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('bridge-directory/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install PHP dependencies
+        working-directory: bridge-directory
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Node.js dependencies
+        working-directory: bridge-directory
+        run: npm install
+
+      - name: Build assets
+        working-directory: bridge-directory
+        run: npm run build
+
+      - name: Prepare release directory
+        run: |
+          mkdir -p release/bridge-directory
+          rsync -av --exclude='node_modules' --exclude='.git' --exclude='.github' --exclude='tests' --exclude='webpack.config.js' --exclude='composer.json' --exclude='composer.lock' --exclude='package.json' --exclude='package-lock.json' --exclude='phpcs.xml' --exclude='README.md' --exclude='.gitignore' --exclude='.gitattributes' bridge-directory/ ./release/bridge-directory
+
+      - name: Get version from tag
+        id: get_tag
+        run: echo "::set-output name=tag::${GITHUB_REF##*/}"
+
+      - name: Archive plugin
+        run: |
+          cd release
+          zip -r bridge-directory-${{ steps.get_tag.outputs.tag }}.zip bridge-directory
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release/bridge-directory-${{ steps.get_tag.outputs.tag }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,3 +1,9 @@
+## [0.0.9]
+
+### Fixed
+
+- **Query Builder**: Fixed an issue where the advanced query filter was not encoding parameters correctly, leading to invalid API requests.
+
 ## [0.0.8]
 
 ### Changed

@@ -130,26 +130,46 @@ class API_Client {
 
         $args['access_token'] = $this->access_token;
 
-        // Parse advanced query parameters
-        $advanced_args = [];
-        if ( ! empty( $this->advanced_query ) ) {
-            parse_str( $this->advanced_query, $advanced_args );
-            // Remove OfficeStatus and ModificationTimestamp.gt from advanced args if present
-            unset( $advanced_args['OfficeStatus'], $advanced_args['ModificationTimestamp.gt'] );
+        // Build base query string from $args
+        $base_query_string = http_build_query( $args, '', '&', PHP_QUERY_RFC3986 );
+
+        // Process advanced query string
+        $advanced_query_string = $this->advanced_query;
+        if ( ! empty( $advanced_query_string ) ) {
+            // Remove OfficeStatus and ModificationTimestamp.gt from advanced query string
+            // Build an array of parameters to remove
+            $params_to_remove = ['OfficeStatus', 'ModificationTimestamp.gt'];
+
+            // Split advanced query string into parameters
+            $pairs = explode('&', $advanced_query_string);
+            $filtered_pairs = [];
+            foreach ( $pairs as $pair ) {
+                $pair = trim($pair);
+                if ( $pair === '' ) continue;
+                $kv = explode('=', $pair, 2);
+                $key = urldecode($kv[0]);
+                if ( in_array( $key, $params_to_remove ) ) continue;
+                $filtered_pairs[] = $pair;
+            }
+            // Rebuild advanced query string
+            $advanced_query_string = implode('&', $filtered_pairs);
         }
 
-        // Merge advanced query parameters without overriding existing keys
-        $args = array_merge( $advanced_args, $args );
+        // Combine base query string and advanced query string
+        if ( ! empty( $advanced_query_string ) ) {
+            $query_string = $base_query_string . '&' . $advanced_query_string;
+        } else {
+            $query_string = $base_query_string;
+        }
 
         $url = sprintf(
             'https://api.bridgedataoutput.com/api/v2/%s/offices',
             $this->dataset_name
         );
 
-        // Encode query parameters to ensure proper URL formatting
-        $query_string = http_build_query( $args, '', '&', PHP_QUERY_RFC3986 );
+        $full_url = $url . '?' . $query_string;
 
-        $response = wp_remote_get( $url . '?' . $query_string );
+        $response = wp_remote_get( $full_url );
 
         if ( is_wp_error( $response ) ) {
             return $response;

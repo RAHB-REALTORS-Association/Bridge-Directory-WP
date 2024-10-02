@@ -1,6 +1,6 @@
 {
     "name": "bridge-directory",
-    "version": "0.0.11",
+    "version": "0.0.12",
     "description": "A WordPress plugin that displays a searchable directory of offices using the Bridge Interactive API.",
     "main": "index.js",
     "scripts": {

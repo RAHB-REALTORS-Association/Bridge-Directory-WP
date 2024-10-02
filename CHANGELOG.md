@@ -1,3 +1,9 @@
+## [0.0.12]
+
+### Fixed
+
+- **Search Handler Database Access**: Corrected an issue where the search handler was not able to access the custom database table, ensuring that search functionality works as expected.
+
 ## [0.0.11]
 
 ### Fixed

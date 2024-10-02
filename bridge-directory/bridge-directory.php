@@ -3,7 +3,7 @@
  * Plugin Name: Bridge API Directory
  * Plugin URI: https://github.com/RAHB-REALTORS-Association/Bridge-Directory-WP
  * Description: Displays a searchable directory of offices using the Bridge Interactive API.
- * Version: 0.0.11
+ * Version: 0.0.12
  * Author: Cornerstone Association of REALTORS
  * Author URI: https://www.cornerstone.inc
  * License: GPL-2.0

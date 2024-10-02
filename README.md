@@ -13,9 +13,10 @@ Displays a searchable directory of offices using the Bridge Data Output API.
 ## Usage
 
 1. Navigate to `Settings -> Bridge Directory` to configure the plugin:
-   - **Access Token:** Your API access token.
-   - **Dataset Name:** The dataset to query (e.g., `itso`).
-   - **Sync Interval:** How often (in hours) to perform incremental syncs.
+   - **Access Token:** Obtain this from your Bridge Data Output API account.
+   - **Dataset Name:** Specify the dataset to query (e.g., `itso`).
+   - **Sync Interval:** Set how often (in hours) to perform incremental syncs.
+   - **Advanced Query Filter:** Customize additional query parameters for the API requests. These parameters will be added to the API calls but will not override `OfficeStatus`, which is managed by the plugin. Do not include `OfficeStatus` in this field. Separate multiple parameters with `&`.
 2. Click the **Full Sync** button to initiate the initial data synchronization.
 3. In the WordPress block editor, add the **Bridge Office List** block to your page or post.
 4. Customize the block settings in the editor sidebar.

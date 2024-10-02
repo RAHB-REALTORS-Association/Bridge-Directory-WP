@@ -6,10 +6,12 @@ defined( 'ABSPATH' ) || exit;
 class API_Client {
     private $access_token;
     private $dataset_name;
+    private $advanced_query;
 
     public function __construct() {
-        $this->access_token = get_option( 'bridge_directory_access_token' );
-        $this->dataset_name = get_option( 'bridge_directory_dataset_name' );
+        $this->access_token    = get_option( 'bridge_directory_access_token' );
+        $this->dataset_name    = get_option( 'bridge_directory_dataset_name' );
+        $this->advanced_query  = get_option( 'bridge_directory_advanced_query', '' );
     }
 
     public function fetch_all_offices() {
@@ -128,12 +130,26 @@ class API_Client {
 
         $args['access_token'] = $this->access_token;
 
+        // Parse advanced query parameters
+        $advanced_args = [];
+        if ( ! empty( $this->advanced_query ) ) {
+            parse_str( $this->advanced_query, $advanced_args );
+            // Remove OfficeStatus from advanced args if present
+            unset( $advanced_args['OfficeStatus'] );
+        }
+
+        // Merge advanced query parameters without overriding existing keys
+        $args = array_merge( $advanced_args, $args );
+
         $url = sprintf(
             'https://api.bridgedataoutput.com/api/v2/%s/offices',
             $this->dataset_name
         );
 
-        $response = wp_remote_get( add_query_arg( $args, $url ) );
+        // Encode query parameters to ensure proper URL formatting
+        $query_string = http_build_query( $args, '', '&', PHP_QUERY_RFC3986 );
+
+        $response = wp_remote_get( $url . '?' . $query_string );
 
         if ( is_wp_error( $response ) ) {
             return $response;

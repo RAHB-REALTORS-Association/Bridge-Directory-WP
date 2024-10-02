@@ -27,20 +27,20 @@ class Settings_Page {
         // Process sync and clear cache actions
         if ( isset( $_POST['bridge_directory_full_sync'] ) ) {
             check_admin_referer( 'bridge_directory_full_sync' );
-            $data_sync = new Data_Sync();
+            $data_sync = new Data_Sync( new DB_Handler() );
             $data_sync->full_sync();
             echo '<div class="updated"><p>Full sync initiated.</p></div>';
         }
 
         if ( isset( $_POST['bridge_directory_clear_cache'] ) ) {
             check_admin_referer( 'bridge_directory_clear_cache' );
-            $cache_handler = new Cache_Handler();
-            $cache_handler->clear_cache();
-            echo '<div class="updated"><p>Cache cleared.</p></div>';
+            $db_handler = new DB_Handler();
+            $db_handler->clear_data();
+            echo '<div class="updated"><p>Data cleared.</p></div>';
         }
 
-        $cache_handler = new DB_Handler();
-        $total_records = $cache_handler->get_total_records();
+        $db_handler = new DB_Handler();
+        $total_records = $db_handler->get_total_records();
 
         ?>
         <div class="wrap">
@@ -54,7 +54,7 @@ class Settings_Page {
             </form>
 
             <h2>Data Management</h2>
-            <p>Total Cached Records: <?php echo esc_html( $total_records ); ?></p>
+            <p>Total Records: <?php echo esc_html( $total_records ); ?></p>
             <form method="post">
                 <?php wp_nonce_field( 'bridge_directory_full_sync' ); ?>
                 <input type="hidden" name="bridge_directory_full_sync" value="1">
@@ -63,7 +63,7 @@ class Settings_Page {
             <form method="post" style="margin-top: 10px;">
                 <?php wp_nonce_field( 'bridge_directory_clear_cache' ); ?>
                 <input type="hidden" name="bridge_directory_clear_cache" value="1">
-                <?php submit_button( 'Clear Cache', 'secondary', 'submit', false ); ?>
+                <?php submit_button( 'Clear Data', 'secondary', 'submit', false ); ?>
             </form>
         </div>
         <?php
@@ -78,14 +78,14 @@ class Settings_Page {
             'sanitize_callback' => [ $this, 'validate_input' ],
         ] );
 
-        register_setting( 'bridge_directory_settings', 'bridge_directory_cache_lifetime', [
+        register_setting( 'bridge_directory_settings', 'bridge_directory_sync_interval', [
             'sanitize_callback' => 'absint',
             'default'           => 24,
         ] );
 
-        register_setting( 'bridge_directory_settings', 'bridge_directory_sync_interval', [
-            'sanitize_callback' => 'absint',
-            'default'           => 24,
+        register_setting( 'bridge_directory_settings', 'bridge_directory_advanced_query', [
+            'sanitize_callback' => [ $this, 'sanitize_query' ],
+            'default'           => '',
         ] );
 
         add_settings_section(
@@ -118,6 +118,14 @@ class Settings_Page {
             'bridge_directory_settings',
             'bridge_directory_main'
         );
+
+        add_settings_field(
+            'bridge_directory_advanced_query',
+            'Advanced Query Filter',
+            [ $this, 'advanced_query_field_html' ],
+            'bridge_directory_settings',
+            'bridge_directory_main'
+        );
     }
 
     public function access_token_field_html() {
@@ -135,7 +143,18 @@ class Settings_Page {
         echo '<input type="number" name="bridge_directory_sync_interval" value="' . esc_attr( $value ) . '" min="1" />';
     }
 
+    public function advanced_query_field_html() {
+        $value = get_option( 'bridge_directory_advanced_query', '' );
+        echo '<input type="text" name="bridge_directory_advanced_query" value="' . esc_attr( $value ) . '" style="width: 100%;" />';
+        echo '<p class="description">Enter additional query parameters for the API requests. Separate parameters with <code>&</code>. Do not include <code>OfficeStatus</code>. Example: <code>OriginatingSystemName.in=Hamilton&OriginatingSystemName.in=Mississauga</code></p>';
+    }
+
     public function validate_input( $input ) {
         return sanitize_text_field( $input );
+    }
+
+    public function sanitize_query( $input ) {
+        // Allow specific characters for query parameters
+        return preg_replace( '/[^a-zA-Z0-9=&._-]/', '', $input );
     }
 }

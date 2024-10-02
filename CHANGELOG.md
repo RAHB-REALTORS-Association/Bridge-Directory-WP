@@ -1,3 +1,9 @@
+## [0.0.8]
+
+### Changed
+
+- **Class File Naming**: Renamed class files to conform to PSR-4 standards, ensuring consistency and compatibility with modern PHP development practices.
+
 ## [0.0.7]
 
 ### Added

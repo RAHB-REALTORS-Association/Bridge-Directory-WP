@@ -91,4 +91,9 @@ class DB_Handler {
         $count = $wpdb->get_var( "SELECT COUNT(*) FROM {$this->table_name}" );
         return $count;
     }
+
+    public function clear_data() {
+        global $wpdb;
+        $wpdb->query( "TRUNCATE TABLE {$this->table_name}" );
+    }
 }

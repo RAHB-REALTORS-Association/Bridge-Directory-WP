@@ -52,4 +52,5 @@ vendor
 node_modules
 release
 build
+.vscode
 .DS_Store

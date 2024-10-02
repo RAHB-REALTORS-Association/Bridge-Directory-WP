@@ -91,7 +91,7 @@ class Settings_Page {
         add_settings_section(
             'bridge_directory_main',
             'API Settings',
-            null,
+            function() { echo '<p>Enter your API settings below:</p>'; },
             'bridge_directory_settings'
         );
 

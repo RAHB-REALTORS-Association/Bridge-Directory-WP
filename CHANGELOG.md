@@ -1,3 +1,7 @@
+## [0.1.0]
+
+### First Stable Release
+
 ## [0.0.12]
 
 ### Fixed

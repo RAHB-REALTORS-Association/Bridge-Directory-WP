@@ -4,8 +4,10 @@ Displays a searchable directory of offices using the Bridge Interactive API.
 
 ## Installation
 
-1. Upload the plugin files to the `/wp-content/plugins/bridge-directory` directory, or install the plugin through the WordPress plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins/bridge-directory` directory, or install the plugin zipfile through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
+
+### Development
 3. Install dependencies:
    - Run `composer install` to set up autoloading.
    - Run `npm install` and `npm run build` to build block editor scripts.
@@ -50,3 +52,4 @@ Displays a searchable directory of offices using the Bridge Interactive API.
 - **Version 0.0.10**: Fix WordPress block editor script loading issue.
 - **Version 0.0.11**: Fix search handler access to the database table.
 - **Version 0.0.12**: Fix search handler access to the database table.
+- **Version 0.1.0**: First stable release with full functionality.

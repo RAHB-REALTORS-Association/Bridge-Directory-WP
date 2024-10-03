@@ -1,55 +1,111 @@
 # Bridge API Directory
 
-Displays a searchable directory of offices using the Bridge Interactive API.
+[![License](https://img.shields.io/badge/license-GPLv2-green.svg)](LICENSE)
 
-## Installation
+> [!IMPORTANT]
+> This project is not affiliated with Bridge Interactive or Zillow. Please do not contact them for support related to issues with this plugin.
 
-1. Upload the plugin files to the `/wp-content/plugins/bridge-directory` directory, or install the plugin zipfile through the WordPress plugins screen directly.
-2. Activate the plugin through the 'Plugins' screen in WordPress.
+A WordPress plugin that displays a comprehensive, searchable directory of office locations using the Bridge Interactive API.
 
-### Development
-3. Install dependencies:
-   - Run `composer install` to set up autoloading.
-   - Run `npm install` and `npm run build` to build block editor scripts.
+## Table of Contents
 
-## Usage
-
-1. Navigate to `Settings -> Bridge Directory` to configure the plugin:
-   - **Access Token:** Obtain this from your Bridge Data Output API account.
-   - **Dataset Name:** Specify the dataset to query (e.g., `itso`).
-   - **Sync Interval:** Set how often (in hours) to perform incremental syncs.
-   - **Advanced Query Filter:** Customize additional query parameters for the API requests. These parameters will be added to the API calls but will not override `OfficeStatus`, which is managed by the plugin. Do not include `OfficeStatus` in this field. Separate multiple parameters with `&`.
-2. Click the **Full Sync** button to initiate the initial data synchronization.
-3. In the WordPress block editor, add the **Bridge Office List** block to your page or post.
-4. Customize the block settings in the editor sidebar.
+- [Features](#features)
+- [Benefits](#benefits)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Technical Highlights](#technical-highlights)
+- [License](#license)
 
 ## Features
 
-- **Full Sync:** Manually initiate a full synchronization of all active offices.
-- **Incremental Sync:** Automatically fetch updates and remove inactive offices at set intervals.
-- **Search Functionality:** Users can search offices by name, phone, or email.
-- **Customizable Display:** Adjust the number of columns and rows in the block editor.
-- **Cache Management:** Clear the cache manually if needed.
-- **Enhanced Directory Display:** Offices are displayed as a grid of cards for better visual presentation.
-- **Live Search with Debounce:** Users can search offices with instant feedback, and the search input is debounced to optimize performance.
-- **Infinite Scroll:** As users scroll down, more offices are loaded automatically without needing to click pagination links.
+- **Responsive Office Directory**: Displays offices in a grid of interactive cards, each showing essential information such as name, address, phone, email, and website.
+- **Advanced Search**: Users can search for offices by name, address, phone number, or email with instant feedback thanks to client-side filtering and debounce optimization.
+- **Infinite Scroll**: Offices are loaded automatically as users scroll, enhancing the user experience without traditional pagination.
+- **Automated Data Sync**: Full and incremental synchronization with the Bridge Interactive API to keep office data current, including handling of inactive records.
+- **Custom Database Storage**: Utilizes a custom WordPress database table for efficient storage and retrieval, optimized for large datasets.
+- **User-Friendly Admin Interface**: Intuitive settings page for configuring API access, synchronization intervals, and managing data directly from the WordPress admin dashboard.
 
-## Data Storage
+## Benefits
 
-- The plugin uses a custom database table (`wp_bridge_directory_offices`) to store office records for better performance with large datasets.
+### For Website Visitors
 
-## Changelog
+- **Enhanced User Experience**: Easily find and contact the nearest office with an intuitive and responsive interface.
+- **Quick Access to Information**: Advanced search functionality reduces the time needed to locate specific offices.
 
-- **Version 0.0.1**: Established the foundation with basic directory display and search capabilities.
-- **Version 0.0.2**: Introduced robust data synchronization processes to handle large datasets efficiently.
-- **Version 0.0.3**: Enhanced the front-end user interface with a grid display, search bar, and infinite scroll.
-- **Version 0.0.4**: Improved performance and scalability by implementing a custom database table for data storage.
-- **Version 0.0.5**: Added flexibility with an advanced query filter setting, allowing administrators to customize API requests without compromising core functionality.
-- **Version 0.0.6**: Correctly use ModificationTimestamp.gt parameter in API requests to fetch only modified records since the last sync for incremental updates.
-- **Version 0.0.7**: Added GitHub Action workflow for automated release builds.
-- **Version 0.0.8**: Rename class files to conform to PSR-4 standards.
-- **Version 0.0.9**: Fix query parameter building to handle multiple parameters correctly.
-- **Version 0.0.10**: Fix WordPress block editor script loading issue.
-- **Version 0.0.11**: Fix search handler access to the database table.
-- **Version 0.0.12**: Fix search handler access to the database table.
-- **Version 0.1.0**: First stable release with full functionality.
+### For Administrators
+
+- **Operational Efficiency**: Automates the updating of office information, reducing manual workload and minimizing errors.
+- **Accurate Data**: Ensures the directory reflects the most current office statuses and details.
+- **Scalable Solution**: Designed to handle growth as more offices are added without significant redevelopment.
+
+## Installation
+
+1. **Install Plugin**:
+   - **Option A**: Download the latest plugin zip file from the [Releases](releases/) Page and install it through the WordPress `Plugins -> Add New Plugin` screen directly.
+   - **Option B**: Upload the `bridge-directory` folder from the repository to the `/wp-content/plugins` directory on your WordPress installation, then install the dependencies (see Development Setup below).
+2. **Activate Plugin**: Activate the plugin through the `Plugins -> Installed Plugins` screen in WordPress.
+
+### Development Setup
+
+If you chose Option B and are setting up the plugin for development purposes, from the `bridge-directory` folder:
+
+3. **Install Dependencies**:
+   - Run `composer install` to set up autoloading.
+   - Run `npm install` to install Node.js dependencies.
+   - Run `npm run build` to build the block editor scripts.
+
+## Usage
+
+1. **Configure Plugin Settings**:
+   - Navigate to `Settings -> Bridge Directory` in the WordPress admin dashboard.
+   - **Access Token**: Enter your Bridge Data Output API access token.
+   - **Dataset Name**: Specify the dataset name to query (e.g., `itso`).
+   - **Sync Interval**: Set how often (in hours) to perform incremental syncs. Default is every 24 hours.
+   - **Advanced Query Filter**: (Optional) Add additional query parameters for API requests. Do not include `OfficeStatus` in this field. Separate multiple parameters with `&`.
+2. **Data Synchronization**:
+   - Click the **Full Sync** button to initiate the initial data synchronization.
+   - The plugin will automatically perform incremental syncs based on the configured interval.
+3. **Add Office Directory to Pages or Posts**:
+   - In the WordPress block editor, add the **Bridge Office List** block to your page or post.
+   - Customize the block settings in the editor sidebar to adjust the number of columns and rows.
+4. **Manage Data and Cache**:
+   - You can manually clear the cache if needed from the settings page.
+
+## Configuration
+
+### API Access
+
+- **Access Token**: Required. Obtain this from your Bridge Data Output API account.
+- **Dataset Name**: Required. The dataset you want to query (e.g., `itso`).
+
+### Sync Settings
+
+- **Sync Interval**: Optional. Set the interval (in hours) for automatic incremental synchronization. Default is 24 hours.
+- **Advanced Query Filter**: Optional. Add custom query parameters to refine the data fetched from the API.
+
+### Display Settings
+
+- **Columns and Rows**: Customize the number of columns and rows in the directory grid via the block editor settings.
+
+## Technical Highlights
+
+- **Integration with Bridge Data Output API**:
+  - Real-time data fetching ensures accurate and up-to-date information.
+  - Selective data retrieval optimizes performance and reduces data transfer.
+- **Modern Development Practices**:
+  - Object-oriented programming (OOP) enhances code maintainability and scalability.
+  - Uses namespaces and PSR-4 autoloading via Composer.
+  - Adheres to WordPress coding standards for compatibility and reliability.
+- **Performance Optimization**:
+  - Debounce implementation improves search performance by minimizing unnecessary server requests.
+  - Client-side filtering reduces server load by handling search within the user's browser.
+  - Custom database table optimizes data storage and retrieval speeds for large datasets.
+- **Security Measures**:
+  - Data sanitization of all user inputs to prevent vulnerabilities.
+  - Nonce verification for AJAX requests and form submissions to prevent unauthorized access.
+  - Prepared statements for database queries to prevent SQL injection attacks.
+
+## License
+
+The code in this repository is licensed under the GPLv2 License - see the [LICENSE](LICENSE) file for details.

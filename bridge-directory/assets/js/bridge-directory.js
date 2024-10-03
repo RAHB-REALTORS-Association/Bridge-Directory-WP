@@ -60,8 +60,13 @@
                     parts.push(`<p><a href="mailto:${office.OfficeEmail}">${office.OfficeEmail}</a></p>`);
                 }
                 
-                // Address (always shown)
-                parts.push(`<p>${office.OfficeAddress1} ${office.OfficeAddress2}, ${office.OfficeCity}, ${office.OfficeStateOrProvince} ${office.OfficePostalCode}</p>`);
+                // Format the address with separate lines
+                let address = `<p>${office.OfficeAddress1}</p>`;
+                if (office.OfficeAddress2) {
+                    address += `<p>${office.OfficeAddress2}</p>`;
+                }
+                address += `<p>${office.OfficeCity}, ${office.OfficeStateOrProvince} ${office.OfficePostalCode}</p>`;
+                parts.push(address);
                 
                 // Correct the URL if it doesn't start with http:// or https://
                 if (office.SocialMediaWebsiteUrlOrId) {

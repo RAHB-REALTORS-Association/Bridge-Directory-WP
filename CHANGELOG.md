@@ -1,3 +1,9 @@
+## [0.2.5]
+
+### Changed
+
+- **Address Formatting**: Updated the address formatting in the office cards to display the city, state, and ZIP code on separate lines for improved readability.
+
 ## [0.2.4]
 
 ### Fixed

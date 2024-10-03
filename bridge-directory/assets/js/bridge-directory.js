@@ -50,40 +50,39 @@
         function appendResultsToGrid(offices) {
             offices.forEach(function (office) {
                 const parts = [];
-                
-                // Link the phone number using OfficePhoneNormalized
-                const phone = office.OfficePhoneNormalized ? `<a href="tel:${office.OfficePhoneNormalized}">${office.OfficePhone}</a>` : office.OfficePhone;
+
+                const phone = office.OfficePhoneNormalized && office.OfficePhoneNormalized !== "null"
+                    ? `<a href="tel:${office.OfficePhoneNormalized}">${office.OfficePhone}</a>`
+                    : office.OfficePhone;
                 parts.push(`<p>${phone}</p>`);
-                
-                // Link the email if it exists
-                if (office.OfficeEmail) {
+
+                if (office.OfficeEmail && office.OfficeEmail !== "none@onmls.ca" && office.OfficeEmail !== "null") {
                     parts.push(`<p><a href="mailto:${office.OfficeEmail}">${office.OfficeEmail}</a></p>`);
                 }
-                
-                // Format the address with separate lines
-                let address = `<p>${office.OfficeAddress1}</p>`;
-                if (office.OfficeAddress2) {
-                    address += `<p>${office.OfficeAddress2}</p>`;
+
+                let address = `<p>${office.OfficeAddress1 !== "null" ? office.OfficeAddress1 : ""}</p>`;
+                if (office.OfficeAddress2 && office.OfficeAddress2 !== "null") {
+                    address += `${office.OfficeAddress2}`;
                 }
-                address += `<p>${office.OfficeCity}, ${office.OfficeStateOrProvince} ${office.OfficePostalCode}</p>`;
+                address += `${office.OfficeCity !== "null" ? office.OfficeCity : ""}, ${office.OfficeStateOrProvince !== "null" ? office.OfficeStateOrProvince : ""} ${office.OfficePostalCode !== "null" ? office.OfficePostalCode : ""}</p>`;
                 parts.push(address);
-                
-                // Correct the URL if it doesn't start with http:// or https://
-                if (office.SocialMediaWebsiteUrlOrId) {
+
+                if (office.SocialMediaWebsiteUrlOrId && office.SocialMediaWebsiteUrlOrId !== "null") {
                     let url = office.SocialMediaWebsiteUrlOrId;
                     if (!/^https?:\/\//i.test(url)) {
                         url = `http://${url}`;
                     }
-                    parts.push(`<p><a href="${url}" target="_blank">${url}</a></p>`);
+                    const displayUrl = url.replace(/^https?:\/\//i, '');
+                    parts.push(`<p><a href="${url}" target="_blank">${displayUrl}</a></p>`);
                 }
-        
+
                 const card = `
                     <div class="bridge-directory-card">
-                        <h4>${office.OfficeName}</h4>
+                        <h4>${office.OfficeName !== "null" ? office.OfficeName : ""}</h4>
                         ${parts.join('')}
                     </div>
                 `;
-                
+
                 $cardsContainer.append(card);
             });
         }

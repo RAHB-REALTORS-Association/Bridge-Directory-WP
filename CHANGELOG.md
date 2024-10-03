@@ -1,3 +1,14 @@
+## [0.2.6]
+
+### Changed
+
+- **Cleaned website display**: Stripped "http://" or "https://" from website link text.
+
+### Fixed
+
+- **Handled null values**: Ensured fields with "null" strings are treated as empty.
+- **Excluded placeholder emails**: Removed "none@onmls.ca" email from display.
+
 ## [0.2.5]
 
 ### Changed

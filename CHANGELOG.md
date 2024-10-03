@@ -1,3 +1,9 @@
+## [0.2.2]
+
+### Fixed
+
+- **Website URLs without Protocol**: Corrected an issue where website URLs without a protocol were creating invalid links in the office cards.
+
 ## [0.2.1]
 
 ### Changed

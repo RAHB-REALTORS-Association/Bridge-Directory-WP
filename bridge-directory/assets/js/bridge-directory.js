@@ -58,7 +58,11 @@
                 if (address) parts.push(`<p>${address}</p>`);
                 
                 if (office.SocialMediaWebsiteUrlOrId) {
-                    parts.push(`<p><a href="${office.SocialMediaWebsiteUrlOrId}" target="_blank">${office.SocialMediaWebsiteUrlOrId}</a></p>`);
+                    let url = office.SocialMediaWebsiteUrlOrId;
+                    if (!/^https?:\/\//i.test(url)) {
+                        url = `http://${url}`;
+                    }
+                    parts.push(`<p><a href="${url}" target="_blank">${url}</a></p>`);
                 }
         
                 const card = `

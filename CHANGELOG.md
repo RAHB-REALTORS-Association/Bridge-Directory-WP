@@ -1,3 +1,10 @@
+## [0.2.1]
+
+### Changed
+
+- **Hide empty fields**: Updated the plugin to hide empty fields in the office cards, providing a cleaner and more consistent display.
+- **Adjust heading levels**: Updated the heading levels in the office cards to improve layout.
+
 ## [0.2.0]
 
 ### Added

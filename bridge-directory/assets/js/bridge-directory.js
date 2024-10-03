@@ -49,15 +49,25 @@
 
         function appendResultsToGrid(offices) {
             offices.forEach(function (office) {
+                const parts = [];
+                
+                if (office.OfficePhone) parts.push(`<p>${office.OfficePhone}</p>`);
+                if (office.OfficeEmail) parts.push(`<p>${office.OfficeEmail}</p>`);
+                
+                const address = `${office.OfficeAddress1 || ''} ${office.OfficeAddress2 || ''}, ${office.OfficeCity || ''}, ${office.OfficeStateOrProvince || ''} ${office.OfficePostalCode || ''}`.trim();
+                if (address) parts.push(`<p>${address}</p>`);
+                
+                if (office.SocialMediaWebsiteUrlOrId) {
+                    parts.push(`<p><a href="${office.SocialMediaWebsiteUrlOrId}" target="_blank">${office.SocialMediaWebsiteUrlOrId}</a></p>`);
+                }
+        
                 const card = `
                     <div class="bridge-directory-card">
-                        <h3>${office.OfficeName}</h3>
-                        <p><strong>Phone:</strong> ${office.OfficePhone || ''}</p>
-                        <p><strong>Email:</strong> ${office.OfficeEmail || ''}</p>
-                        <p><strong>Address:</strong> ${office.OfficeAddress1 || ''} ${office.OfficeAddress2 || ''}, ${office.OfficeCity || ''}, ${office.OfficeStateOrProvince || ''} ${office.OfficePostalCode || ''}</p>
-                        ${office.SocialMediaWebsiteUrlOrId ? `<p><strong>Website:</strong> <a href="${office.SocialMediaWebsiteUrlOrId}" target="_blank">${office.SocialMediaWebsiteUrlOrId}</a></p>` : ''}
+                        <h4>${office.OfficeName}</h4>
+                        ${parts.join('')}
                     </div>
                 `;
+                
                 $cardsContainer.append(card);
             });
         }

@@ -3,7 +3,7 @@
  * Plugin Name: Bridge API Directory
  * Plugin URI: https://github.com/RAHB-REALTORS-Association/Bridge-Directory-WP
  * Description: Displays a searchable directory of offices using the Bridge Interactive API.
- * Version: 0.2.8
+ * Version: 0.2.9
  * Author: Cornerstone Association of REALTORS
  * Author URI: https://www.cornerstone.inc
  * License: GPL-2.0
@@ -38,25 +38,13 @@ $block_register->register();
 
 // Initialize Data Sync
 $data_sync = new Data_Sync( $db_handler );
-$data_sync->schedule_incremental_sync();
 
 // Initialize AJAX Handler
 $ajax_handler = new AJAX_Handler( $search_handler );
 
-// Activation and Deactivation Hooks
-register_activation_hook( __FILE__, [ 'BridgeDirectory\DB_Handler', 'activate' ] );
-register_deactivation_hook( __FILE__, [ 'BridgeDirectory\DB_Handler', 'deactivate' ] );
-
-// Cron Hook for Incremental Sync
-add_action( 'bridge_directory_incremental_sync', [ $data_sync, 'incremental_sync' ] );
-
-// Add custom cron schedule
-add_filter( 'cron_schedules', 'bridge_directory_custom_cron_schedule' );
-function bridge_directory_custom_cron_schedule( $schedules ) {
-    $interval = get_option( 'bridge_directory_sync_interval', 24 ) * HOUR_IN_SECONDS;
-    $schedules['bridge_directory_sync_interval'] = [
-        'interval' => $interval,
-        'display'  => 'Bridge Directory Sync Interval',
-    ];
-    return $schedules;
-}
+/**
+ * Register Activation and Deactivation Hooks
+* These hooks delegate scheduling tasks to the Data_Sync class.
+*/
+register_activation_hook( __FILE__, [ $data_sync, 'activate_plugin' ] );
+register_deactivation_hook( __FILE__, [ $data_sync, 'deactivate_plugin' ] );

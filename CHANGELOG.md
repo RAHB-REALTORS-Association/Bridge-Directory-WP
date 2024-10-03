@@ -1,3 +1,10 @@
+## [0.2.9]
+
+### Fixed
+
+- **Cron scheduling initialization**: Fixed an issue where the cron scheduling was not being initialized correctly, causing the incremental synchronization to not run as expected.
+- **Cron schedule interval update**: Fixed an issue where the cron schedule interval was not being updated based on the plugin settings, ensuring that the synchronization interval is respected.
+
 ## [0.2.8]
 
 ### Fixed

@@ -51,12 +51,19 @@
             offices.forEach(function (office) {
                 const parts = [];
                 
-                if (office.OfficePhone) parts.push(`<p>${office.OfficePhone}</p>`);
-                if (office.OfficeEmail) parts.push(`<p>${office.OfficeEmail}</p>`);
+                // Link the phone number using PhoneNumberNormalized
+                const phone = office.PhoneNumberNormalized ? `<a href="tel:${office.PhoneNumberNormalized}">${office.OfficePhone}</a>` : office.OfficePhone;
+                parts.push(`<p>${phone}</p>`);
                 
-                const address = `${office.OfficeAddress1 || ''} ${office.OfficeAddress2 || ''}, ${office.OfficeCity || ''}, ${office.OfficeStateOrProvince || ''} ${office.OfficePostalCode || ''}`.trim();
-                if (address) parts.push(`<p>${address}</p>`);
+                // Link the email if it exists
+                if (office.OfficeEmail) {
+                    parts.push(`<p><a href="mailto:${office.OfficeEmail}">${office.OfficeEmail}</a></p>`);
+                }
                 
+                // Address (always shown)
+                parts.push(`<p>${office.OfficeAddress1} ${office.OfficeAddress2}, ${office.OfficeCity}, ${office.OfficeStateOrProvince} ${office.OfficePostalCode}</p>`);
+                
+                // Correct the URL if it doesn't start with http:// or https://
                 if (office.SocialMediaWebsiteUrlOrId) {
                     let url = office.SocialMediaWebsiteUrlOrId;
                     if (!/^https?:\/\//i.test(url)) {

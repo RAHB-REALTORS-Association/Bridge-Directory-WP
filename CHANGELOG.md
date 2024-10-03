@@ -1,3 +1,9 @@
+## [0.2.3]
+
+### Fixed
+
+- **Phone and Email Links**: Corrected an issue where phone numbers and email addresses were not being displayed as clickable links in the office cards.
+
 ## [0.2.2]
 
 ### Fixed

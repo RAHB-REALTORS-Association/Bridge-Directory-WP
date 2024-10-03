@@ -15,6 +15,9 @@ class DB_Handler {
         return $this->table_name;
     }
 
+    /**
+     * Plugin Activation: Create the database table.
+     */
     public static function activate() {
         global $wpdb;
         $table_name = $wpdb->prefix . 'bridge_directory_offices';
@@ -40,15 +43,23 @@ class DB_Handler {
         dbDelta( $sql );
     }
 
+    /**
+     * Plugin Deactivation: Optionally drop the database table.
+     */
     public static function deactivate() {
-        // Optionally, delete the table or leave it for future use
-        // Uncomment the following lines to drop the table upon deactivation
-
         global $wpdb;
         $table_name = $wpdb->prefix . 'bridge_directory_offices';
-        $wpdb->query( "DROP TABLE IF EXISTS $table_name" );
+        $table_name_escaped = esc_sql( $table_name );
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name is safe and escaped.
+        $sql = "DROP TABLE IF EXISTS `$table_name_escaped`";
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table creation queries cannot be prepared, and variables are safe.
+        $wpdb->query( $sql );
     }
 
+    /**
+     * Save offices to the database.
+     */
     public function save_offices( $offices ) {
         global $wpdb;
         foreach ( $offices as $office ) {
@@ -76,33 +87,77 @@ class DB_Handler {
         }
     }
 
+    /**
+     * Update offices in the database.
+     */
     public function update_offices( $offices ) {
         $this->save_offices( $offices );
     }
 
+    /**
+     * Remove offices from the database.
+     */
     public function remove_offices( $office_keys ) {
         global $wpdb;
-        $placeholders = implode( ',', array_fill( 0, count( $office_keys ), '%s' ) );
-        $wpdb->query( $wpdb->prepare(
-            "DELETE FROM {$this->table_name} WHERE OfficeKey IN ($placeholders)",
-            $office_keys
-        ) );
+
+        if ( empty( $office_keys ) ) {
+            return;
+        }
+
+        $table_name_escaped = esc_sql( $this->table_name );
+        $placeholders = implode( ', ', array_fill( 0, count( $office_keys ), '%s' ) );
+
+        $sql = "DELETE FROM `$table_name_escaped` WHERE OfficeKey IN ($placeholders)";
+
+        // Prepare the SQL statement with the office keys
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name is safe and escaped.
+        $prepared_sql = $wpdb->prepare( $sql, $office_keys );
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Prepared above with $wpdb->prepare()
+        $wpdb->query( $prepared_sql );
     }
 
+    /**
+     * Retrieve all offices from the database.
+     */
     public function get_offices() {
         global $wpdb;
-        $results = $wpdb->get_results( "SELECT * FROM {$this->table_name}", ARRAY_A );
+        $table_name_escaped = esc_sql( $this->table_name );
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name is safe and escaped.
+        $sql = "SELECT * FROM `$table_name_escaped`";
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name is safe and escaped.
+        $results = $wpdb->get_results( $sql, ARRAY_A );
         return $results;
     }
 
+    /**
+     * Get the total number of records in the database.
+     */
     public function get_total_records() {
         global $wpdb;
-        $count = $wpdb->get_var( "SELECT COUNT(*) FROM {$this->table_name}" );
+        $table_name_escaped = esc_sql( $this->table_name );
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name is safe and escaped.
+        $sql = "SELECT COUNT(*) FROM `$table_name_escaped`";
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name is safe and escaped.
+        $count = $wpdb->get_var( $sql );
         return $count;
     }
 
+    /**
+     * Clear all data from the database table.
+     */
     public function clear_data() {
         global $wpdb;
-        $wpdb->query( "TRUNCATE TABLE {$this->table_name}" );
+        $table_name_escaped = esc_sql( $this->table_name );
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name is safe and escaped.
+        $sql = "TRUNCATE TABLE `$table_name_escaped`";
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name is safe and escaped.
+        $wpdb->query( $sql );
     }
 }

@@ -26,6 +26,7 @@ class Data_Sync {
 
         $schedules['bridge_directory_sync_interval'] = [
             'interval' => $interval_seconds,
+            // Translators: %d is the number of hours.
             'display'  => sprintf( __( 'Every %d Hours', 'bridge-directory' ), $interval_hours ),
         ];
 

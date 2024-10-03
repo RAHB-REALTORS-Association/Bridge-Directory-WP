@@ -17,7 +17,7 @@ class AJAX_Handler {
         check_ajax_referer( 'bridge_directory_nonce', 'nonce' );
 
         $page = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
-        $query = isset( $_POST['query'] ) ? sanitize_text_field( $_POST['query'] ) : '';
+        $query = isset( $_POST['query'] ) ? sanitize_text_field( wp_unslash( $_POST['query'] ) ) : '';
         $limit = 20; // Number of results per page
 
         $offices = $this->search_handler->search_offices( $query, $page, $limit );

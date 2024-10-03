@@ -15,17 +15,14 @@ class Search_Handler {
 
         $offset = ( $page - 1 ) * $limit;
         $table_name = $this->db_handler->get_table_name();
+        $table_name_escaped = esc_sql( $table_name );
 
-        $sql = "SELECT * FROM {$table_name}";
-        $where_clauses = [];
         $parameters = [];
+        $where_clauses = [];
 
         if ( ! empty( $query ) ) {
             $like_query = '%' . $wpdb->esc_like( $query ) . '%';
-
-            // Normalize the search query for phone number comparison
             $normalized_query = preg_replace( '/\D/', '', $query );
-            $normalized_like_query = '%' . $wpdb->esc_like( $normalized_query ) . '%';
 
             // Always search by OfficeName and OfficeEmail
             $where_clauses[] = "(OfficeName LIKE %s OR OfficeEmail LIKE %s)";
@@ -34,6 +31,7 @@ class Search_Handler {
 
             // Search by normalized phone number if the normalized query has at least 7 digits
             if ( strlen( $normalized_query ) >= 7 ) {
+                $normalized_like_query = '%' . $wpdb->esc_like( $normalized_query ) . '%';
                 $where_clauses[] = "OfficePhoneNormalized LIKE %s";
                 $parameters[] = $normalized_like_query;
             }
@@ -46,22 +44,23 @@ class Search_Handler {
             $parameters[] = $like_query;
         }
 
+        $where = '';
         if ( ! empty( $where_clauses ) ) {
-            $sql .= ' WHERE ' . implode( ' OR ', $where_clauses );
+            $where = ' WHERE ' . implode( ' OR ', $where_clauses );
         }
 
-        $sql .= ' ORDER BY OfficeName ASC';
-        $sql .= ' LIMIT %d OFFSET %d';
-        $parameters[] = (int) $limit;
-        $parameters[] = (int) $offset;
+        $sql = "SELECT * FROM `$table_name_escaped` $where ORDER BY OfficeName ASC LIMIT %d OFFSET %d";
 
-        // Prepare the entire SQL statement with all parameters at once
+        $parameters[] = $limit;
+        $parameters[] = $offset;
+
+        // Prepare the SQL statement
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Prepared with $wpdb->prepare()
         $prepared_sql = $wpdb->prepare( $sql, $parameters );
 
-        // Optional: Log the final SQL for debugging
-        // error_log( $prepared_sql );
-
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Prepared above with $wpdb->prepare()
         $results = $wpdb->get_results( $prepared_sql, ARRAY_A );
+
         return $results;
     }
 }

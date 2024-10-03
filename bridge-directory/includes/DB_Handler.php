@@ -29,6 +29,7 @@ class DB_Handler {
             OfficeStateOrProvince varchar(100),
             OfficePostalCode varchar(50),
             OfficePhone varchar(50),
+            OfficePhoneNormalized varchar(50),
             OfficeFax varchar(50),
             OfficeEmail varchar(100),
             SocialMediaWebsiteUrlOrId varchar(255),
@@ -51,6 +52,9 @@ class DB_Handler {
     public function save_offices( $offices ) {
         global $wpdb;
         foreach ( $offices as $office ) {
+            // Normalize phone number
+            $office_phone_normalized = preg_replace( '/\D/', '', $office['OfficePhone'] );
+
             $wpdb->replace(
                 $this->table_name,
                 [
@@ -62,11 +66,12 @@ class DB_Handler {
                     'OfficeStateOrProvince'     => $office['OfficeStateOrProvince'],
                     'OfficePostalCode'          => $office['OfficePostalCode'],
                     'OfficePhone'               => $office['OfficePhone'],
+                    'OfficePhoneNormalized'     => $office_phone_normalized,
                     'OfficeFax'                 => $office['OfficeFax'],
                     'OfficeEmail'               => $office['OfficeEmail'],
                     'SocialMediaWebsiteUrlOrId' => $office['SocialMediaWebsiteUrlOrId'],
                 ],
-                [ '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ]
+                [ '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ]
             );
         }
     }

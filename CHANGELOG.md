@@ -1,3 +1,9 @@
+## [0.2.0]
+
+### Added
+
+- **Search Handler Enhancements**: Added ability to search addresses as well as normalize phone number queries for better search results.
+
 ## [0.1.0]
 
 ### First Stable Release

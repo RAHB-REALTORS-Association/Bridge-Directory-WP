@@ -1,3 +1,9 @@
+## [0.3.2]
+
+### Fixed
+
+- **Mis-numbered version**: Corrected the version number to match the actual version number.
+
 ## [0.3.1]
 
 ### Changed

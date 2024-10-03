@@ -1,3 +1,9 @@
+## [0.2.7]
+
+### Fixed
+
+- **Null value handling**: Fixed an issue where null values were not being handled correctly in the office cards.
+
 ## [0.2.6]
 
 ### Changed

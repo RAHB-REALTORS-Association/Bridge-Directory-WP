@@ -47,27 +47,53 @@
             });
         }
 
+        function isValid(value) {
+            return value !== null && value !== undefined && value !== "null" && value !== "";
+        }
+
         function appendResultsToGrid(offices) {
             offices.forEach(function (office) {
                 const parts = [];
 
-                const phone = office.OfficePhoneNormalized && office.OfficePhoneNormalized !== "null"
-                    ? `<a href="tel:${office.OfficePhoneNormalized}">${office.OfficePhone}</a>`
-                    : office.OfficePhone;
-                parts.push(`<p>${phone}</p>`);
+                // Handle Phone
+                if (isValid(office.OfficePhoneNormalized)) {
+                    parts.push(`<p><a href="tel:${office.OfficePhoneNormalized}">${office.OfficePhone}</a></p>`);
+                } else if (isValid(office.OfficePhone)) {
+                    parts.push(`<p>${office.OfficePhone}</p>`);
+                }
 
-                if (office.OfficeEmail && office.OfficeEmail !== "none@onmls.ca" && office.OfficeEmail !== "null") {
+                // Handle Email
+                if (isValid(office.OfficeEmail) && office.OfficeEmail !== "none@onmls.ca") {
                     parts.push(`<p><a href="mailto:${office.OfficeEmail}">${office.OfficeEmail}</a></p>`);
                 }
 
-                let address = `<p>${office.OfficeAddress1 !== "null" ? office.OfficeAddress1 : ""}</p>`;
-                if (office.OfficeAddress2 && office.OfficeAddress2 !== "null") {
-                    address += `${office.OfficeAddress2}`;
+                // Handle Address
+                let addressParts = [];
+                if (isValid(office.OfficeAddress1)) {
+                    addressParts.push(office.OfficeAddress1);
                 }
-                address += `${office.OfficeCity !== "null" ? office.OfficeCity : ""}, ${office.OfficeStateOrProvince !== "null" ? office.OfficeStateOrProvince : ""} ${office.OfficePostalCode !== "null" ? office.OfficePostalCode : ""}</p>`;
-                parts.push(address);
+                if (isValid(office.OfficeAddress2)) {
+                    addressParts.push(office.OfficeAddress2);
+                }
+                let cityStateZip = [];
+                if (isValid(office.OfficeCity)) {
+                    cityStateZip.push(office.OfficeCity);
+                }
+                if (isValid(office.OfficeStateOrProvince)) {
+                    cityStateZip.push(office.OfficeStateOrProvince);
+                }
+                if (isValid(office.OfficePostalCode)) {
+                    cityStateZip.push(office.OfficePostalCode);
+                }
+                if (cityStateZip.length > 0) {
+                    addressParts.push(cityStateZip.join(", "));
+                }
+                if (addressParts.length > 0) {
+                    parts.push(`<p>${addressParts.join("<br>")}</p>`);
+                }
 
-                if (office.SocialMediaWebsiteUrlOrId && office.SocialMediaWebsiteUrlOrId !== "null") {
+                // Handle Social Media Website URL or ID
+                if (isValid(office.SocialMediaWebsiteUrlOrId)) {
                     let url = office.SocialMediaWebsiteUrlOrId;
                     if (!/^https?:\/\//i.test(url)) {
                         url = `http://${url}`;
@@ -76,9 +102,11 @@
                     parts.push(`<p><a href="${url}" target="_blank">${displayUrl}</a></p>`);
                 }
 
+                // Handle Office Name
+                const officeName = isValid(office.OfficeName) ? office.OfficeName : "";
                 const card = `
                     <div class="bridge-directory-card">
-                        <h4>${office.OfficeName !== "null" ? office.OfficeName : ""}</h4>
+                        <h4>${officeName}</h4>
                         ${parts.join('')}
                     </div>
                 `;

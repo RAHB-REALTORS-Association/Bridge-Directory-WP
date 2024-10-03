@@ -1,4 +1,4 @@
-=== Bridge API Directory ===
+=== Bridge Directory ===
 Contributors: justinhrahb
 Tags: real estate, bridge, brokerage, api
 Requires at least: 5.0

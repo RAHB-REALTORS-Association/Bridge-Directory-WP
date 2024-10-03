@@ -1,6 +1,14 @@
+## [0.3.1]
+
+### Changed
+
+- **Plugin name**: Updated the plugin name to "Bridge Directory" for consistency and clarity in preparation for submission to the WordPress plugin repository.
+
 ## [0.3.0]
 
+### Fixed
 
+- **Linting errors**: Fixed linting errors in the codebase to ensure consistency and maintainability and prepare for submission to the WordPress plugin repository.
 
 ## [0.2.9]
 

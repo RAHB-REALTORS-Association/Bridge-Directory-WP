@@ -1,3 +1,9 @@
+## [0.2.8]
+
+### Fixed
+
+- **Search by address**: Fixed an issue where searching by address was not working as expected.
+
 ## [0.2.7]
 
 ### Fixed

@@ -38,14 +38,12 @@ class Search_Handler {
                 $parameters[] = $normalized_like_query;
             }
 
-            // Check if the query contains at least one digit for address search
-            if ( preg_match( '/\d/', $query ) ) {
-                $where_clauses[] = "(OfficeAddress1 LIKE %s OR OfficeAddress2 LIKE %s OR OfficeCity LIKE %s OR OfficePostalCode LIKE %s)";
-                $parameters[] = $like_query;
-                $parameters[] = $like_query;
-                $parameters[] = $like_query;
-                $parameters[] = $like_query;
-            }
+            // Remove the digit check to allow address searches without digits
+            $where_clauses[] = "(OfficeAddress1 LIKE %s OR OfficeAddress2 LIKE %s OR OfficeCity LIKE %s OR OfficePostalCode LIKE %s)";
+            $parameters[] = $like_query;
+            $parameters[] = $like_query;
+            $parameters[] = $like_query;
+            $parameters[] = $like_query;
         }
 
         if ( ! empty( $where_clauses ) ) {
@@ -53,11 +51,17 @@ class Search_Handler {
         }
 
         $sql .= ' ORDER BY OfficeName ASC';
-        $sql .= $wpdb->prepare( ' LIMIT %d OFFSET %d', $limit, $offset );
+        $sql .= ' LIMIT %d OFFSET %d';
+        $parameters[] = (int) $limit;
+        $parameters[] = (int) $offset;
 
-        $sql = $wpdb->prepare( $sql, $parameters );
+        // Prepare the entire SQL statement with all parameters at once
+        $prepared_sql = $wpdb->prepare( $sql, $parameters );
 
-        $results = $wpdb->get_results( $sql, ARRAY_A );
+        // Optional: Log the final SQL for debugging
+        // error_log( $prepared_sql );
+
+        $results = $wpdb->get_results( $prepared_sql, ARRAY_A );
         return $results;
     }
 }

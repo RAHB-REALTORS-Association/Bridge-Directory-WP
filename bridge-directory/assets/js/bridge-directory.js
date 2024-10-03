@@ -51,8 +51,8 @@
             offices.forEach(function (office) {
                 const parts = [];
                 
-                // Link the phone number using PhoneNumberNormalized
-                const phone = office.PhoneNumberNormalized ? `<a href="tel:${office.PhoneNumberNormalized}">${office.OfficePhone}</a>` : office.OfficePhone;
+                // Link the phone number using OfficePhoneNormalized
+                const phone = office.OfficePhoneNormalized ? `<a href="tel:${office.OfficePhoneNormalized}">${office.OfficePhone}</a>` : office.OfficePhone;
                 parts.push(`<p>${phone}</p>`);
                 
                 // Link the email if it exists

@@ -1,3 +1,9 @@
+## [0.2.4]
+
+### Fixed
+
+- **Incorrect field used for phone links**: Corrected an issue where the normalized phone number field was not being used to generate clickable phone links in the office cards.
+
 ## [0.2.3]
 
 ### Fixed

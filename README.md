@@ -1,4 +1,4 @@
-# Bridge API Directory
+# Bridge Interactive API Directory for WordPress
 
 [![License](https://img.shields.io/badge/license-GPLv2-green.svg)](LICENSE)
 

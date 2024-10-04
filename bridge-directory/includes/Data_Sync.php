@@ -116,11 +116,23 @@ class Data_Sync {
      */
     public function incremental_sync() {
         error_log( 'Bridge Directory: Starting incremental sync.' );
+        // Retrieve the last sync time, defaulting to Unix epoch if not set
         $last_sync = get_option( 'bridge_directory_last_sync', '1970-01-01T00:00:00Z' );
 
-        // Ensure the timestamp is in the correct format and in UTC
-        $last_sync_formatted = gmdate( 'Y-m-d\TH:i:s\Z', strtotime( $last_sync ) );
+        // Parse the last sync time as a DateTime object in UTC
+        try {
+            $date = new \DateTime( $last_sync, new \DateTimeZone( 'UTC' ) );
+        } catch ( \Exception $e ) {
+            // Handle parsing error
+            error_log( 'Bridge Directory: Failed to parse last sync time. Defaulting to Unix epoch.' );
+            $date = new \DateTime( '1970-01-01T00:00:00Z', new \DateTimeZone( 'UTC' ) );
+        }
+        // Format the date for use in the API request
+        $last_sync_formatted = $date->format( 'Y-m-d\TH:i:s\Z' );
+        // Log the formatted timestamp for debugging
+        error_log( 'Bridge Directory: Last sync timestamp for API request: ' . $last_sync_formatted );
 
+        // Use $last_sync_formatted in your API requests
         $updated_offices = $this->api_client->fetch_updated_offices( $last_sync_formatted );
         $inactive_offices = $this->api_client->fetch_inactive_offices( $last_sync_formatted );
 
@@ -140,7 +152,9 @@ class Data_Sync {
             error_log( 'Bridge Directory Incremental Sync Error (Inactive Offices): ' . $inactive_offices->get_error_message() );
         }
 
-        update_option( 'bridge_directory_last_sync', gmdate( 'Y-m-d\TH:i:s\Z' ) );
-        error_log( 'Bridge Directory: Incremental sync completed.' );
+        // Update the last sync time to the current time in UTC
+        $current_time_utc = gmdate( 'Y-m-d\TH:i:s\Z' );
+        update_option( 'bridge_directory_last_sync', $current_time_utc );
+        error_log( 'Bridge Directory: Incremental sync completed. Updated last sync time to ' . $current_time_utc );
     }
 }

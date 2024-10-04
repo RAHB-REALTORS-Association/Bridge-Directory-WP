@@ -81,7 +81,6 @@ The Advanced Query Filter allows you to add custom query parameters to refine th
 * Updated `readme.txt` to comply with WordPress Plugin Directory requirements.
 * Fixed URL encoding in API requests to handle spaces and dashes in advanced query parameters.
 * Improved settings sanitization to allow valid special characters in advanced queries.
-* Enhanced advanced query handling in the API client for better parameter processing.
 
 = 0.3.2 =
 * Fixed version numbering to match the actual plugin version.

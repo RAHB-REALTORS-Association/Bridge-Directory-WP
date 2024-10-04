@@ -86,7 +86,7 @@
                     cityStateZip.push(office.OfficePostalCode);
                 }
                 if (cityStateZip.length > 0) {
-                    addressParts.push(cityStateZip.join(", "));
+                    addressParts.push(cityStateZip.join(" "));
                 }
                 if (addressParts.length > 0) {
                     parts.push(`<p>${addressParts.join("<br>")}</p>`);

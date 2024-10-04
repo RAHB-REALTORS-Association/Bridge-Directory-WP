@@ -137,7 +137,6 @@ class API_Client {
         $advanced_query_string = $this->advanced_query;
         if ( ! empty( $advanced_query_string ) ) {
             // Remove OfficeStatus and ModificationTimestamp.gt from advanced query string
-            // Build an array of parameters to remove
             $params_to_remove = ['OfficeStatus', 'ModificationTimestamp.gt'];
 
             // Split advanced query string into parameters
@@ -149,7 +148,8 @@ class API_Client {
                 $kv = explode('=', $pair, 2);
                 $key = urldecode($kv[0]);
                 if ( in_array( $key, $params_to_remove ) ) continue;
-                $filtered_pairs[] = $pair;
+                $value = isset($kv[1]) ? str_replace(' ', '+', urldecode($kv[1])) : '';
+                $filtered_pairs[] = urlencode($key) . '=' . urlencode($value);
             }
             // Rebuild advanced query string
             $advanced_query_string = implode('&', $filtered_pairs);

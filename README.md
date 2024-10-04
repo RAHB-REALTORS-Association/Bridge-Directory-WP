@@ -1,11 +1,11 @@
-# Bridge API Directory
+# Bridge Interactive API Directory for WordPress
 
 [![License](https://img.shields.io/badge/license-GPLv2-green.svg)](LICENSE)
 
 > [!IMPORTANT]
 > This project is not affiliated with Bridge Interactive or Zillow. Please do not contact them for support related to issues with this plugin.
 
-A WordPress plugin that displays a comprehensive, searchable directory of office locations using the Bridge Interactive API.
+A WordPress plugin that displays a comprehensive, searchable directory of office locations using the [Bridge Interactive API](https://bridgedataoutput.com/docs/explorer/mls-data#listOffices).
 
 ## Table of Contents
 
@@ -22,7 +22,7 @@ A WordPress plugin that displays a comprehensive, searchable directory of office
 - **Responsive Office Directory**: Displays offices in a grid of interactive cards, each showing essential information such as name, address, phone, email, and website.
 - **Advanced Search**: Users can search for offices by name, address, phone number, or email with instant feedback thanks to client-side filtering and debounce optimization.
 - **Infinite Scroll**: Offices are loaded automatically as users scroll, enhancing the user experience without traditional pagination.
-- **Automated Data Sync**: Full and incremental synchronization with the Bridge Interactive API to keep office data current, including handling of inactive records.
+- **Automated Data Sync**: Full and incremental synchronization with the [Bridge Interactive API](https://bridgedataoutput.com/docs/explorer/mls-data#listOffices) to keep office data current, including handling of inactive records.
 - **Custom Database Storage**: Utilizes a custom WordPress database table for efficient storage and retrieval, optimized for large datasets.
 - **User-Friendly Admin Interface**: Intuitive settings page for configuring API access, synchronization intervals, and managing data directly from the WordPress admin dashboard.
 
@@ -77,6 +77,7 @@ If you chose Option B and are setting up the plugin for development purposes, fr
 ### API Access
 
 - **Access Token**: Required. Obtain this from your Bridge Data Output API account.
+  - Refer to the [Bridge API Explorer and Documentation](https://bridgedataoutput.com/docs/explorer/mls-data#listOffices) for more information on obtaining an access token and available datasets.
 - **Dataset Name**: Required. The dataset you want to query (e.g., `itso`).
 
 ### Sync Settings

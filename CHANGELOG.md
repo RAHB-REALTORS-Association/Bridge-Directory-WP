@@ -1,3 +1,16 @@
+## [0.3.3]
+
+### Added
+
+- **Readme.txt Compliance**: Updated the `readme.txt` file to comply with WordPress Plugin Directory requirements. Added missing sections including `Requires PHP` field, `Frequently Asked Questions`, and `Changelog`.
+
+### Fixed
+
+- **API Client URL Encoding**: Ensured proper URL encoding of query parameter values in the `API_Client` class. This fix allows spaces and dashes in advanced query parameters, resolving issues where certain valid characters were not being correctly encoded when making API requests.
+
+- **Settings Sanitization**: Updated the `Settings_Page` class to allow spaces and dashes in the advanced query parameters. Modified the `sanitize_query` method to permit valid special characters, ensuring that user input is not unnecessarily stripped.
+
+
 ## [0.3.2]
 
 ### Fixed

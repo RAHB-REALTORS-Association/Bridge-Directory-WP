@@ -154,7 +154,7 @@ class Settings_Page {
     }
 
     public function sanitize_query( $input ) {
-        // Allow specific characters for query parameters
-        return preg_replace( '/[^a-zA-Z0-9=&._-]/', '', $input );
+        // Allow characters commonly used in URLs and query parameters
+        return preg_replace( '/[^a-zA-Z0-9=&._\-+]/', '', $input );
     }
 }

@@ -77,6 +77,11 @@ The Advanced Query Filter allows you to add custom query parameters to refine th
 
 == Changelog ==
 
+= 0.3.4 =
+* Added functionality to link office addresses to Google Maps for easy navigation.
+* Removed unused files and assets from the plugin directory to improve maintainability and reduce clutter.
+* Adjusted the scroll threshold for infinite scroll to improve user experience and performance.
+
 = 0.3.3 =
 * Updated `readme.txt` to comply with WordPress Plugin Directory requirements.
 * Fixed URL encoding in API requests to handle spaces and dashes in advanced query parameters.

@@ -8,6 +8,10 @@
 
 - **Removed unused files**: Removed unused files and assets from the plugin directory to improve maintainability and reduce clutter.
 
+### Changed
+
+- **Scroll threshold for infinite scroll**: Adjusted the scroll threshold for infinite scroll to improve user experience and performance.
+
 ## [0.3.3]
 
 ### Added

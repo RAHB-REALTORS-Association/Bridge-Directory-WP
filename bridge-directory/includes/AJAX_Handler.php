@@ -22,6 +22,24 @@ class AJAX_Handler {
 
         $offices = $this->search_handler->search_offices( $query, $page, $limit );
 
+        // Escape all string values before sending to the client
+        $offices = array_map( [ $this, 'escape_office_data' ], $offices );
+
         wp_send_json_success( [ 'offices' => $offices ] );
+    }
+
+    private function escape_office_data( $office ) {
+        $string_fields = [
+            'OfficeKey', 'OfficeName', 'OfficeAddress1', 'OfficeAddress2',
+            'OfficeCity', 'OfficeStateOrProvince', 'OfficePostalCode',
+            'OfficePhone', 'OfficePhoneNormalized', 'OfficeFax',
+            'OfficeEmail', 'SocialMediaWebsiteUrlOrId',
+        ];
+        foreach ( $string_fields as $field ) {
+            if ( isset( $office[ $field ] ) ) {
+                $office[ $field ] = esc_html( $office[ $field ] );
+            }
+        }
+        return $office;
     }
 }

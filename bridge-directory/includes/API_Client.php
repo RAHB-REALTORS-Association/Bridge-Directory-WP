@@ -128,9 +128,7 @@ class API_Client {
             return new \WP_Error( 'missing_credentials', 'API credentials are missing.' );
         }
 
-        $args['access_token'] = $this->access_token;
-
-        // Build base query string from $args
+        // Build base query string from $args (token sent via header, not URL)
         $base_query_string = http_build_query( $args, '', '&', PHP_QUERY_RFC3986 );
 
         // Process advanced query string
@@ -164,19 +162,32 @@ class API_Client {
 
         $url = sprintf(
             'https://api.bridgedataoutput.com/api/v2/%s/offices',
-            $this->dataset_name
+            rawurlencode( $this->dataset_name )
         );
 
         $full_url = $url . '?' . $query_string;
 
-        $response = wp_remote_get( $full_url );
+        $response = wp_remote_get( $full_url, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->access_token,
+            ],
+        ] );
 
         if ( is_wp_error( $response ) ) {
             return $response;
         }
 
+        $status_code = wp_remote_retrieve_response_code( $response );
+        if ( $status_code < 200 || $status_code >= 300 ) {
+            return new \WP_Error( 'api_http_error', sprintf( 'API returned HTTP %d.', $status_code ) );
+        }
+
         $body = wp_remote_retrieve_body( $response );
         $data = json_decode( $body, true );
+
+        if ( null === $data ) {
+            return new \WP_Error( 'api_json_error', 'API returned invalid JSON.' );
+        }
 
         if ( isset( $data['success'] ) && $data['success'] ) {
             return $data['bundle'];

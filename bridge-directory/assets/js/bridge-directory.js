@@ -5,6 +5,25 @@
     let lastQuery = '';
     let debounceTimeout;
 
+    function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function isSafeUrl(url) {
+        try {
+            var parsed = new URL(url, window.location.origin);
+            return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+        } catch (e) {
+            return false;
+        }
+    }
+
     $(document).ready(function () {
         const $searchInput = $('#bridge-directory-search-input');
         const $cardsContainer = $('#bridge-directory-cards');
@@ -57,14 +76,14 @@
 
                 // Handle Phone
                 if (isValid(office.OfficePhoneNormalized)) {
-                    parts.push(`<p><a href="tel:${office.OfficePhoneNormalized}">${office.OfficePhone}</a></p>`);
+                    parts.push(`<p><a href="tel:${escapeHtml(office.OfficePhoneNormalized)}">${escapeHtml(office.OfficePhone)}</a></p>`);
                 } else if (isValid(office.OfficePhone)) {
-                    parts.push(`<p>${office.OfficePhone}</p>`);
+                    parts.push(`<p>${escapeHtml(office.OfficePhone)}</p>`);
                 }
 
                 // Handle Email
                 if (isValid(office.OfficeEmail) && office.OfficeEmail !== "none@onmls.ca") {
-                    parts.push(`<p><a href="mailto:${office.OfficeEmail}">${office.OfficeEmail}</a></p>`);
+                    parts.push(`<p><a href="mailto:${escapeHtml(office.OfficeEmail)}">${escapeHtml(office.OfficeEmail)}</a></p>`);
                 }
 
                 // Handle Address
@@ -91,17 +110,14 @@
 
                 if (addressParts.length > 0) {
                     // Build the full address for display and for the query
-                    const addressDisplay = addressParts.join("<br>");
+                    const addressDisplay = addressParts.map(function(p) { return escapeHtml(p); }).join("<br>");
                     const addressForQuery = addressParts.join(", ");
 
-                    // Encode the address for the URL
-                    const addressQuery = encodeURIComponent(addressForQuery);
-
-                    // Build the Google Maps search URL
-                    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${office.OfficeName}+${addressQuery}`;
+                    // Encode the address and office name for the URL
+                    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(office.OfficeName)}+${encodeURIComponent(addressForQuery)}`;
 
                     // Add the clickable address to parts
-                    parts.push(`<p><a href="${mapsUrl}" target="_blank">${addressDisplay}</a></p>`);
+                    parts.push(`<p><a href="${escapeHtml(mapsUrl)}" target="_blank">${addressDisplay}</a></p>`);
                 }
 
                 // Handle Social Media Website URL or ID
@@ -110,12 +126,14 @@
                     if (!/^https?:\/\//i.test(url)) {
                         url = `http://${url}`;
                     }
-                    const displayUrl = url.replace(/^https?:\/\//i, '');
-                    parts.push(`<p><a href="${url}" target="_blank">${displayUrl}</a></p>`);
+                    if (isSafeUrl(url)) {
+                        const displayUrl = url.replace(/^https?:\/\//i, '');
+                        parts.push(`<p><a href="${escapeHtml(url)}" target="_blank">${escapeHtml(displayUrl)}</a></p>`);
+                    }
                 }
 
                 // Handle Office Name
-                const officeName = isValid(office.OfficeName) ? office.OfficeName : "";
+                const officeName = isValid(office.OfficeName) ? escapeHtml(office.OfficeName) : "";
                 const card = `
                     <div class="bridge-directory-card">
                         <h4>${officeName}</h4>

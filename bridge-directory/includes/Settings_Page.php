@@ -130,7 +130,7 @@ class Settings_Page {
 
     public function access_token_field_html() {
         $value = get_option( 'bridge_directory_access_token', '' );
-        echo '<input type="text" name="bridge_directory_access_token" value="' . esc_attr( $value ) . '" />';
+        echo '<input type="password" name="bridge_directory_access_token" value="' . esc_attr( $value ) . '" autocomplete="off" />';
     }
 
     public function dataset_name_field_html() {
